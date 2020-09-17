@@ -66,14 +66,18 @@ class SetQuota extends Base {
 		}
 		$quotaInput = $input->getArgument('quota');
 
-		$computerQuota = \OC_Helper::computerFileSize($quotaInput);
+		if ($quotaInput === 'default') {
+			$quota = $quotaInput;
+		} else {
+			$computerQuota = \OC_Helper::computerFileSize($quotaInput);
 
-		if (!$computerQuota) {
-			$output->writeln("<error>Malformed quote input</error>");
-			return -1;
+			if (!$computerQuota) {
+				$output->writeln("<error>Malformed quote input</error>");
+				return -1;
+			}
+
+			$quota = \OC_Helper::humanFileSize($computerQuota);
 		}
-
-		$quota = \OC_Helper::humanFileSize($computerQuota);
 
 		$this->quotaManager->setGroupDefault($groupId, $quota);
 		$output->writeln($quota);

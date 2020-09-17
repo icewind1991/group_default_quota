@@ -37,7 +37,11 @@ class QuotaManager {
 	}
 
 	public function setGroupDefault(string $groupId, string $quota) {
-		$this->config->setAppValue('group_default_quota', 'default_quota_' . $groupId, $quota);
+		if ($quota === 'default') {
+			$this->config->deleteAppValue('group_default_quota', 'default_quota_' . $groupId);
+		} else {
+			$this->config->setAppValue('group_default_quota', 'default_quota_' . $groupId, $quota);
+		}
 	}
 
 	public function getGroupDefault(string $groupId): string {
@@ -45,6 +49,10 @@ class QuotaManager {
 	}
 
 	public function getDefaultQuotaForUser(IUser $user): string {
+		$quota = $this->config->getUserValue($user->getUID(), 'files', 'quota', 'default');
+		if ($quota !== 'default') {
+			return $quota;
+		}
 		$groups = $this->groupManager->getUserGroupIds($user);
 		$groupQuotas = array_map(function (string $groupId) {
 			$quota = $this->getGroupDefault($groupId);
