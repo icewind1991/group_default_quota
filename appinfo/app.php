@@ -1,6 +1,6 @@
 <?php
 
-use OC\User\GetQuotaEvent;
+use OCP\User\GetQuotaEvent;
 use \OCA\GroupDefaultQuota\AppInfo\Application;
 
 if (class_exists(GetQuotaEvent::class)) {

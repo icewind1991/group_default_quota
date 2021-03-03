@@ -54,6 +54,9 @@ class QuotaManager {
 			return $quota;
 		}
 		$groups = $this->groupManager->getUserGroupIds($user);
+		if (!$groups) {
+			return $quota;
+		}
 		$groupQuotas = array_map(function (string $groupId) {
 			$quota = $this->getGroupDefault($groupId);
 			return ($quota === 'default') ? 0 : \OC_Helper::computerFileSize($quota);

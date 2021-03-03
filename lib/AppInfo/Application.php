@@ -21,7 +21,7 @@
 
 namespace OCA\GroupDefaultQuota\AppInfo;
 
-use OC\User\GetQuotaEvent;
+use OCP\User\GetQuotaEvent;
 use OCA\GroupDefaultQuota\QuotaManager;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -39,7 +39,7 @@ class Application extends App {
 		/** @var IEventDispatcher $dispatcher */
 		$dispatcher = $this->getContainer()->query(IEventDispatcher::class);
 
-		$dispatcher->addListener(GetQuotaEvent::class, function(GetQuotaEvent $event) {
+		$dispatcher->addListener(GetQuotaEvent::class, function (GetQuotaEvent $event) {
 			$quota = $this->getQuotaManager()->getDefaultQuotaForUser($event->getUser());
 			if ($quota !== 'default') {
 				$event->setQuota($quota);
