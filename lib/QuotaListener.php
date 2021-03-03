@@ -1,6 +1,8 @@
 <?php
+
+declare(strict_types=1);
 /**
- * @copyright Copyright (c) 2020 Robin Appelman <robin@icewind.nl>
+ * @copyright Copyright (c) 2021 Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,24 +21,27 @@
  *
  */
 
-namespace OCA\GroupDefaultQuota\AppInfo;
+namespace OCA\GroupDefaultQuota;
 
-use OCA\GroupDefaultQuota\QuotaListener;
-use OCP\AppFramework\Bootstrap\IBootContext;
-use OCP\AppFramework\Bootstrap\IBootstrap;
-use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
 use OCP\User\GetQuotaEvent;
-use OCP\AppFramework\App;
 
-class Application extends App implements IBootstrap {
-	public function __construct(array $urlParams = []) {
-		parent::__construct('group_default_quota', $urlParams);
+class QuotaListener implements IEventListener {
+	/** @var QuotaManager */
+	private $quotaManager;
+
+	public function __construct(QuotaManager $quotaManager) {
+		$this->quotaManager = $quotaManager;
 	}
 
-	public function register(IRegistrationContext $context): void {
-		$context->registerEventListener(GetQuotaEvent::class, QuotaListener::class);
+	public function handle(Event $event): void {
+		if ($event instanceof GetQuotaEvent) {
+			$quota = $this->quotaManager->getDefaultQuotaForUser($event->getUser());
+			if ($quota !== 'default') {
+				$event->setQuota($quota);
+			}
+		}
 	}
 
-	public function boot(IBootContext $context): void {
-	}
 }
