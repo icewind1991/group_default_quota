@@ -43,5 +43,4 @@ class QuotaListener implements IEventListener {
 			}
 		}
 	}
-
 }
