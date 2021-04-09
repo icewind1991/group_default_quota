@@ -21,6 +21,7 @@
 	<commands>
 		<command>OCA\GroupDefaultQuota\Command\GetQuota</command>
 		<command>OCA\GroupDefaultQuota\Command\SetQuota</command>
+		<command>OCA\GroupDefaultQuota\Command\QuotaList</command>
 	</commands>
 
 	<dependencies>

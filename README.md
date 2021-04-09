@@ -19,3 +19,9 @@ To remove the configured default for a group set it to `default`.
 ```
  occ group_default_quota:get admin
 ```
+
+### Lists the configured default quotas
+
+```
+ occ group_default_quota:list
+```

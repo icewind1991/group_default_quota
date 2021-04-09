@@ -64,4 +64,24 @@ class QuotaManager {
 		$quota = max($groupQuotas);
 		return ($quota == 0) ? 'default' : \OC_Helper::humanFileSize($quota);
 	}
+	
+	public function getQuotaList(): array {
+		$appKeys = $this->config->getAppKeys('group_default_quota');
+		$quotas = [];
+		foreach ($appKeys as $appKey => $appKeyValue) {
+			$appKeyValueArray = explode('_', $appKeyValue, 3);
+			
+			if (sizeof($appKeyValueArray) != 3) {
+				continue;
+			}
+			if ($appKeyValueArray[0] != "default" && $appKeyValueArray[1] != "quota") {
+				continue;
+			}
+			
+			$groupId = $appKeyValueArray[2];
+			
+			$quotas[$groupId] = $this->getGroupDefault($groupId);
+		}
+		return $quotas;
+	}
 }
