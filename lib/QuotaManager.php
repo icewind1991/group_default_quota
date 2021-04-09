@@ -69,16 +69,16 @@ class QuotaManager {
 		$appKeys = $this->config->getAppKeys('group_default_quota');
 		$quotas = [];
 		foreach ($appKeys as $appKey => $appKeyValue) {
-			$appKeyValueArray = explode('_', $appKeyValue, 2);
+			$appKeyValueArray = explode('_', $appKeyValue, 3);
 			
-			if (sizeof($appKeyValueArray) != 2) {
+			if (sizeof($appKeyValueArray) != 3) {
 				continue;
 			}
-			if ($appKeyValueArray[0] != "default_quota_") {
+			if ($appKeyValueArray[0] != "default" && $appKeyValueArray[1] != "quota") {
 				continue;
 			}
 			
-			$groupId = $appKeyValueArray[1];
+			$groupId = $appKeyValueArray[2];
 			$quota = $this->config->getAppValue('group_default_quota', $appKeyValue);
 			
 			$quotaTxt = \OC_Helper::computerFileSize($quota);
