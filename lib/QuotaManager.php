@@ -81,9 +81,7 @@ class QuotaManager {
 			$groupId = $appKeyValueArray[2];
 			$quota = $this->config->getAppValue('group_default_quota', $appKeyValue);
 			
-			$quotaTxt = \OC_Helper::computerFileSize($quota);
-			
-			$quotas[$groupId] = $quotaTxt;
+			$quotas[$groupId] = ($quota == 0) ? 'default' : \OC_Helper::humanFileSize($quota);
 		}
 		return $quotas;
 	}
