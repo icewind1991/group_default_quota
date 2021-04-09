@@ -79,9 +79,8 @@ class QuotaManager {
 			}
 			
 			$groupId = $appKeyValueArray[2];
-			$quota = $this->getGroupDefault($groupId);
 			
-			$quotas[$groupId] = ($quota === 'default' || $quota === 0) ? 'default' : $quota;
+			$quotas[$groupId] = $this->getGroupDefault($groupId);
 		}
 		return $quotas;
 	}
