@@ -65,7 +65,7 @@ class QuotaManager {
 		return ($quota == 0) ? 'default' : \OC_Helper::humanFileSize($quota);
 	}
 	
-	public function getQuotaList(): string {
+	public function getQuotaList(): array {
 		$appKeys = $this->config->getAppKeys('group_default_quota');
 		$quotas = [];
 		foreach ($appKeys as $appKey => $appKeyValue) {
