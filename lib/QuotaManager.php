@@ -79,9 +79,9 @@ class QuotaManager {
 			}
 			
 			$groupId = $appKeyValueArray[2];
-			$quota = $this->config->getAppValue('group_default_quota', $appKeyValue);
+			$quota = $this->getGroupDefault($groupId);
 			
-			$quotas[$groupId] = ($quota == 0) ? 'default' : \OC_Helper::humanFileSize($quota);
+			$quotas[$groupId] = ($quota === 'default' || $quota === 0) ? 'default' : $quota;
 		}
 		return $quotas;
 	}
