@@ -40,7 +40,7 @@ class QuotaList extends Base {
 		$this->quotaManager = $quotaManager;
 	}
 
-	protected function configure() {		
+	protected function configure() {
 		$this
 			->setName('group_default_quota:list')
 			->setDescription('Lists all configured quotas');
