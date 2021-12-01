@@ -6,7 +6,7 @@
 	<description><![CDATA[Allow setting the default quota for users based on their group membership.]]></description>
 	<licence>AGPL</licence>
 	<author>Robin Appelman</author>
-	<version>0.1.2</version>
+	<version>0.1.3</version>
 	<types>
 		<filesystem/>
 	</types>
@@ -25,6 +25,6 @@
 	</commands>
 
 	<dependencies>
-		<nextcloud min-version="20" max-version="22"/>
+		<nextcloud min-version="21" max-version="23"/>
 	</dependencies>
 </info>
