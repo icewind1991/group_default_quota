@@ -30,8 +30,8 @@ use OCP\IUser;
 use Test\TestCase;
 
 class QuotaManagerTest extends TestCase {
-	private $appConfigData = [];
-	private $userConfigData = [];
+	private array $appConfigData = [];
+	private array $userConfigData = [];
 	/** @var IConfig */
 	private $config;
 
