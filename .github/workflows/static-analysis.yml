@@ -19,10 +19,9 @@ jobs:
                 coverage: none
                 extensions: inotify
           - name: Install dependencies
-            run: composer i
-          - name: Install dependencies
             run: |
               rm composer.lock
+              composer i
               composer require --dev nextcloud/ocp:${{ matrix.ocp-version }}
           - name: Run coding standards check
             run: composer run psalm
