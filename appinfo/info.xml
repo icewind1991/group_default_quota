@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
-<info>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>group_default_quota</id>
 	<name>Default group quota</name>
 	<summary>Set default user quotas for group members</summary>
 	<description><![CDATA[Allow setting the default quota for users based on their group membership.]]></description>
-	<licence>AGPL</licence>
-	<author>Robin Appelman</author>
 	<version>0.1.5</version>
+	<licence>agpl</licence>
+	<author>Robin Appelman</author>
+	<namespace>GroupDefaultQuota</namespace>
 	<types>
 		<filesystem/>
 	</types>
-	<namespace>GroupDefaultQuota</namespace>
+
+	<category>files</category>
 
 	<website>https://github.com/icewind1991/group_default_quota</website>
 	<bugs>https://github.com/icewind1991/group_default_quota/issues</bugs>
 	<repository type="git">https://github.com/icewind1991/group_default_quota.git</repository>
 
-	<category>files</category>
+	<dependencies>
+		<nextcloud min-version="23" max-version="25"/>
+	</dependencies>
 
 	<commands>
 		<command>OCA\GroupDefaultQuota\Command\GetQuota</command>
 		<command>OCA\GroupDefaultQuota\Command\SetQuota</command>
 		<command>OCA\GroupDefaultQuota\Command\QuotaList</command>
 	</commands>
-
-	<dependencies>
-		<nextcloud min-version="23" max-version="25"/>
-	</dependencies>
 </info>
