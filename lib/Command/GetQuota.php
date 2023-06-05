@@ -22,9 +22,9 @@
 namespace OCA\GroupDefaultQuota\Command;
 
 use OC\Core\Command\Base;
-use OCP\User\GetQuotaEvent;
 use OCA\GroupDefaultQuota\QuotaManager;
 use OCP\IGroupManager;
+use OCP\User\GetQuotaEvent;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

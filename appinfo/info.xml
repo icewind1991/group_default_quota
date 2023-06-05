@@ -5,7 +5,7 @@
 	<name>Default group quota</name>
 	<summary>Set default user quotas for group members</summary>
 	<description><![CDATA[Allow setting the default quota for users based on their group membership.]]></description>
-	<version>0.1.6</version>
+	<version>0.1.7</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<namespace>GroupDefaultQuota</namespace>
@@ -20,7 +20,7 @@
 	<repository type="git">https://github.com/icewind1991/group_default_quota.git</repository>
 
 	<dependencies>
-		<nextcloud min-version="24" max-version="26"/>
+		<nextcloud min-version="25" max-version="27"/>
 	</dependencies>
 
 	<commands>

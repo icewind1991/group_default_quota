@@ -22,11 +22,11 @@
 namespace OCA\GroupDefaultQuota\AppInfo;
 
 use OCA\GroupDefaultQuota\QuotaListener;
+use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\User\GetQuotaEvent;
-use OCP\AppFramework\App;
 
 class Application extends App implements IBootstrap {
 	public function __construct(array $urlParams = []) {
