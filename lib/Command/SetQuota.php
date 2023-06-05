@@ -67,12 +67,10 @@ class SetQuota extends Base {
 
 		if ($quotaInput === 'default') {
 			$quota = $quotaInput;
-		}
-		else if($quotaInput === '0B') {
-                        $output->writeln("Set Quota to 0B");
-                        $quota = \OC_Helper::computerFileSize("-1B");
-                } 
-		else {
+		} elseif($quotaInput === '0B') {
+			$output->writeln("Set Quota to 0B");
+			$quota = "0";
+		} else {
 			$computerQuota = \OC_Helper::computerFileSize($quotaInput);
 
 			if (!$computerQuota) {
