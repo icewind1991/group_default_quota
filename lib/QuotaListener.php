@@ -27,9 +27,8 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\GetQuotaEvent;
 
-
 /**
- * @template-implements IEventListener<QuotaListener>
+ * @template-implements IEventListener<GetQuotaEvent>
  */
 class QuotaListener implements IEventListener {
 	/** @var QuotaManager */
