@@ -27,6 +27,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\GetQuotaEvent;
 
+
+/**
+ * @template-implements IEventListener<QuotaListener>
+ */
 class QuotaListener implements IEventListener {
 	/** @var QuotaManager */
 	private $quotaManager;
