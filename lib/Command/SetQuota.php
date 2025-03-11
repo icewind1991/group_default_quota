@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2020 Robin Appelman <robin@icewind.nl>
  *
@@ -35,7 +36,7 @@ class SetQuota extends Base {
 
 	public function __construct(
 		IGroupManager $groupManager,
-		QuotaManager $quotaManager
+		QuotaManager $quotaManager,
 	) {
 		parent::__construct();
 		$this->groupManager = $groupManager;
@@ -53,7 +54,7 @@ class SetQuota extends Base {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		if (!class_exists(GetQuotaEvent::class)) {
-			$output->writeln("<error>App not supported on your Nextcloud version, please update to the latest maintenance release.</error>");
+			$output->writeln('<error>App not supported on your Nextcloud version, please update to the latest maintenance release.</error>');
 			return -1;
 		}
 
@@ -67,14 +68,14 @@ class SetQuota extends Base {
 
 		if ($quotaInput === 'default') {
 			$quota = $quotaInput;
-		} elseif($quotaInput === '0B') {
-			$output->writeln("Set Quota to 0B");
-			$quota = "0";
+		} elseif ($quotaInput === '0B') {
+			$output->writeln('Set Quota to 0B');
+			$quota = '0';
 		} else {
 			$computerQuota = \OC_Helper::computerFileSize($quotaInput);
 
 			if (!$computerQuota) {
-				$output->writeln("<error>Malformed quote input</error>");
+				$output->writeln('<error>Malformed quote input</error>');
 				return -1;
 			}
 
