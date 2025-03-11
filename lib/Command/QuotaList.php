@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2020 Robin Appelman <robin@icewind.nl>
  *
@@ -33,7 +34,7 @@ class QuotaList extends Base {
 
 	public function __construct(
 		IGroupManager $groupManager,
-		QuotaManager $quotaManager
+		QuotaManager $quotaManager,
 	) {
 		parent::__construct();
 		$this->groupManager = $groupManager;
@@ -49,9 +50,9 @@ class QuotaList extends Base {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$quotas = $this->quotaManager->getQuotaList();
-		$output->writeln("Group : Quota");
+		$output->writeln('Group : Quota');
 		foreach ($quotas as $groupId => $quota) {
-			$output->writeln($groupId . ": " . $quota);
+			$output->writeln($groupId . ': ' . $quota);
 		}
 		return 0;
 	}

@@ -74,7 +74,7 @@ class QuotaManager {
 			if (sizeof($appKeyValueArray) != 3) {
 				continue;
 			}
-			if ($appKeyValueArray[0] != "default" && $appKeyValueArray[1] != "quota") {
+			if ($appKeyValueArray[0] != 'default' && $appKeyValueArray[1] != 'quota') {
 				continue;
 			}
 			
