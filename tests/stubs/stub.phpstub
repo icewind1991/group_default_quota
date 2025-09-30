@@ -28,14 +28,3 @@ namespace OC\Core\Command {
 	}
 }
 
-namespace {
-	class OC_Helper {
-		public static function computerFileSize(string $size): int {
-			throw new \Exception('stub');
-		}
-
-		public static function humanFileSize(int $size): string {
-			throw new \Exception('stub');
-		}
-	}
-}
