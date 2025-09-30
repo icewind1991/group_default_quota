@@ -31,11 +31,9 @@ use OCP\User\GetQuotaEvent;
  * @template-implements IEventListener<GetQuotaEvent>
  */
 class QuotaListener implements IEventListener {
-	/** @var QuotaManager */
-	private $quotaManager;
-
-	public function __construct(QuotaManager $quotaManager) {
-		$this->quotaManager = $quotaManager;
+	public function __construct(
+		private QuotaManager $quotaManager,
+	) {
 	}
 
 	public function handle(Event $event): void {
