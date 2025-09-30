@@ -25,22 +25,16 @@ namespace OCA\GroupDefaultQuota\Command;
 use OC\Core\Command\Base;
 use OCA\GroupDefaultQuota\QuotaManager;
 use OCP\IGroupManager;
-use OCP\User\GetQuotaEvent;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class GetQuota extends Base {
-	private $quotaManager;
-	private $groupManager;
-
 	public function __construct(
-		IGroupManager $groupManager,
-		QuotaManager $quotaManager,
+		private IGroupManager $groupManager,
+		private QuotaManager $quotaManager,
 	) {
 		parent::__construct();
-		$this->groupManager = $groupManager;
-		$this->quotaManager = $quotaManager;
 	}
 
 	protected function configure() {
@@ -52,11 +46,6 @@ class GetQuota extends Base {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		if (!class_exists(GetQuotaEvent::class)) {
-			$output->writeln('<error>App not supported on your Nextcloud version, please update to the latest maintenance release.</error>');
-			return -1;
-		}
-
 		$groupId = $input->getArgument('name');
 		$group = $this->groupManager->get($groupId);
 		if (!$group) {
@@ -64,9 +53,6 @@ class GetQuota extends Base {
 			return -1;
 		}
 		$quota = $this->quotaManager->getGroupDefault($groupId);
-		if ($quota === 0) {
-			$output = 'default';
-		}
 		$output->writeln($quota);
 
 		return 0;

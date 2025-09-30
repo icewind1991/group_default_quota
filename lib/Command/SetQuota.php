@@ -25,22 +25,17 @@ namespace OCA\GroupDefaultQuota\Command;
 use OC\Core\Command\Base;
 use OCA\GroupDefaultQuota\QuotaManager;
 use OCP\IGroupManager;
-use OCP\User\GetQuotaEvent;
+use OCP\Util;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SetQuota extends Base {
-	private $quotaManager;
-	private $groupManager;
-
 	public function __construct(
-		IGroupManager $groupManager,
-		QuotaManager $quotaManager,
+		private IGroupManager $groupManager,
+		private QuotaManager $quotaManager,
 	) {
 		parent::__construct();
-		$this->groupManager = $groupManager;
-		$this->quotaManager = $quotaManager;
 	}
 
 	protected function configure() {
@@ -53,11 +48,6 @@ class SetQuota extends Base {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		if (!class_exists(GetQuotaEvent::class)) {
-			$output->writeln('<error>App not supported on your Nextcloud version, please update to the latest maintenance release.</error>');
-			return -1;
-		}
-
 		$groupId = $input->getArgument('name');
 		$group = $this->groupManager->get($groupId);
 		if (!$group) {
@@ -72,14 +62,14 @@ class SetQuota extends Base {
 			$output->writeln('Set Quota to 0B');
 			$quota = '0';
 		} else {
-			$computerQuota = \OC_Helper::computerFileSize($quotaInput);
+			$computerQuota = Util::computerFileSize($quotaInput);
 
 			if (!$computerQuota) {
 				$output->writeln('<error>Malformed quote input</error>');
 				return -1;
 			}
 
-			$quota = \OC_Helper::humanFileSize($computerQuota);
+			$quota = Util::humanFileSize($computerQuota);
 		}
 
 		$this->quotaManager->setGroupDefault($groupId, $quota);

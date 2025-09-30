@@ -23,33 +23,34 @@ declare(strict_types=1);
 
 namespace OCA\GroupDefaultQuota;
 
-use OCP\IConfig;
+use OCP\Config\IUserConfig;
+use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IUser;
+use OCP\Util;
 
 class QuotaManager {
-	private $config;
-	private $groupManager;
-
-	public function __construct(IConfig $config, IGroupManager $groupManager) {
-		$this->config = $config;
-		$this->groupManager = $groupManager;
+	public function __construct(
+		private IAppConfig $appConfig,
+		private IUserConfig $userConfig,
+		private IGroupManager $groupManager,
+	) {
 	}
 
 	public function setGroupDefault(string $groupId, string $quota) {
 		if ($quota === 'default') {
-			$this->config->deleteAppValue('group_default_quota', 'default_quota_' . $groupId);
+			$this->appConfig->deleteKey('group_default_quota', 'default_quota_' . $groupId);
 		} else {
-			$this->config->setAppValue('group_default_quota', 'default_quota_' . $groupId, $quota);
+			$this->appConfig->setValueString('group_default_quota', 'default_quota_' . $groupId, $quota);
 		}
 	}
 
 	public function getGroupDefault(string $groupId): string {
-		return $this->config->getAppValue('group_default_quota', 'default_quota_' . $groupId, 'default');
+		return $this->appConfig->getValueString('group_default_quota', 'default_quota_' . $groupId, 'default');
 	}
 
 	public function getDefaultQuotaForUser(IUser $user): string {
-		$quota = $this->config->getUserValue($user->getUID(), 'files', 'quota', 'default');
+		$quota = $this->userConfig->getValueString($user->getUID(), 'files', 'quota', 'default');
 		if ($quota !== 'default') {
 			return $quota;
 		}
@@ -59,27 +60,27 @@ class QuotaManager {
 		}
 		$groupQuotas = array_map(function (string $groupId) {
 			$quota = $this->getGroupDefault($groupId);
-			return ($quota === 'default') ? 0 : \OC_Helper::computerFileSize($quota);
+			return ($quota === 'default') ? 0 : Util::computerFileSize($quota);
 		}, $groups);
 		$quota = max($groupQuotas);
-		return ($quota == 0) ? 'default' : \OC_Helper::humanFileSize($quota);
+		return ($quota == 0) ? 'default' : Util::humanFileSize($quota);
 	}
-	
+
 	public function getQuotaList(): array {
-		$appKeys = $this->config->getAppKeys('group_default_quota');
+		$appKeys = $this->appConfig->getKeys('group_default_quota');
 		$quotas = [];
-		foreach ($appKeys as $appKey => $appKeyValue) {
+		foreach ($appKeys as $appKeyValue) {
 			$appKeyValueArray = explode('_', $appKeyValue, 3);
-			
+
 			if (sizeof($appKeyValueArray) != 3) {
 				continue;
 			}
 			if ($appKeyValueArray[0] != 'default' && $appKeyValueArray[1] != 'quota') {
 				continue;
 			}
-			
+
 			$groupId = $appKeyValueArray[2];
-			
+
 			$quotas[$groupId] = $this->getGroupDefault($groupId);
 		}
 		return $quotas;
