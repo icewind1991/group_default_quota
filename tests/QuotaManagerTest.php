@@ -24,35 +24,46 @@ declare(strict_types=1);
 namespace OCA\GroupDefaultQuota\Tests;
 
 use OCA\GroupDefaultQuota\QuotaManager;
-use OCP\IConfig;
+use OCP\Config\IUserConfig;
+use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class QuotaManagerTest extends TestCase {
 	private array $appConfigData = [];
 	private array $userConfigData = [];
-	/** @var IConfig */
-	private $config;
+	private IAppConfig&MockObject $appConfig;
+	private IUserConfig&MockObject $userConfig;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->config = $this->createMock(IConfig::class);
-		$this->config->method('deleteAppValue')
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->appConfig->method('getKeys')
+			->willReturnCallback(function ($app) {
+				if (isset($this->appConfigData[$app])) {
+					return array_keys($this->appConfigData[$app]);
+				} else {
+					return [];
+				}
+			});
+		$this->appConfig->method('deleteKey')
 			->willReturnCallback(function ($app, $key) {
 				if (isset($this->appConfigData[$app])) {
 					unset($this->appConfigData[$app][$key]);
 				}
 			});
-		$this->config->method('setAppValue')
+		$this->appConfig->method('setValueString')
 			->willReturnCallback(function ($app, $key, $value) {
 				if (!isset($this->appConfigData[$app])) {
 					$this->appConfigData[$app] = [];
 				}
 				$this->appConfigData[$app][$key] = $value;
+				return true;
 			});
-		$this->config->method('getAppValue')
+		$this->appConfig->method('getValueString')
 			->willReturnCallback(function ($app, $key, $default) {
 				if (!isset($this->appConfigData[$app])) {
 					$this->appConfigData[$app] = [];
@@ -63,7 +74,8 @@ class QuotaManagerTest extends TestCase {
 					return $default;
 				}
 			});
-		$this->config->method('getUserValue')
+		$this->userConfig = $this->createMock(IUserConfig::class);
+		$this->userConfig->method('getValueString')
 			->willReturnCallback(function ($uid, $app, $key, $default) {
 				if (!isset($this->userConfigData[$uid])) {
 					$this->userConfigData[$uid] = [];
@@ -99,27 +111,31 @@ class QuotaManagerTest extends TestCase {
 		return $user;
 	}
 
+	private function getQuotaManager(array $groups): QuotaManager {
+		return new QuotaManager($this->appConfig, $this->userConfig, $this->getGroupManager($groups));
+	}
+
 	public function testUserQuotaNoGroups() {
-		$manager = new QuotaManager($this->config, $this->getGroupManager([]));
+		$manager = $this->getQuotaManager([]);
 
 		$this->assertEquals('default', $manager->getDefaultQuotaForUser($this->user('test_user')));
 	}
 
 	public function testUserQuotaNoGroupsWithQuota() {
-		$manager = new QuotaManager($this->config, $this->getGroupManager(['test_user' => ['group1']]));
+		$manager = $this->getQuotaManager(['test_user' => ['group1']]);
 
 		$this->assertEquals('default', $manager->getDefaultQuotaForUser($this->user('test_user')));
 	}
 
 	public function testUserQuotaWithQuotas() {
-		$manager = new QuotaManager($this->config, $this->getGroupManager(['test_user' => ['group1']]));
+		$manager = $this->getQuotaManager(['test_user' => ['group1']]);
 		$manager->setGroupDefault('group1', '10 GB');
 
 		$this->assertEquals('10 GB', $manager->getDefaultQuotaForUser($this->user('test_user')));
 	}
 
 	public function testUserQuotaWithMultipleQuotas() {
-		$manager = new QuotaManager($this->config, $this->getGroupManager(['test_user' => ['group1', 'group2']]));
+		$manager = $this->getQuotaManager(['test_user' => ['group1', 'group2']]);
 		$manager->setGroupDefault('group1', '10 GB');
 		$manager->setGroupDefault('group2', '5 GB');
 
@@ -127,10 +143,21 @@ class QuotaManagerTest extends TestCase {
 	}
 
 	public function testUserQuotaWithUserQuota() {
-		$manager = new QuotaManager($this->config, $this->getGroupManager(['test_user' => ['group1']]));
+		$manager = $this->getQuotaManager(['test_user' => ['group1']]);
 		$manager->setGroupDefault('group1', '10 GB');
 		$this->userConfigData['test_user']['files']['quota'] = '100 MB';
 
 		$this->assertEquals('100 MB', $manager->getDefaultQuotaForUser($this->user('test_user')));
+	}
+
+	public function testListQuota() {
+		$manager = $this->getQuotaManager(['test_user' => ['group1']]);
+		$manager->setGroupDefault('group1', '10 GB');
+
+		$this->assertEquals(['group1' => '10 GB'], $manager->getQuotaList());
+
+		$manager->setGroupDefault('group1', 'default');
+
+		$this->assertEquals([], $manager->getQuotaList());
 	}
 }
