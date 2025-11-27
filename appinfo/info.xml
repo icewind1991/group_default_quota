@@ -5,7 +5,7 @@
 	<name>Default group quota</name>
 	<summary>Set default user quotas for group members</summary>
 	<description><![CDATA[Allow setting the default quota for users based on their group membership.]]></description>
-	<version>0.1.12</version>
+	<version>0.1.13</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<namespace>GroupDefaultQuota</namespace>
