@@ -5,7 +5,7 @@
 		 timeoutForLargeTests="900"
 >
 	<testsuite name='Nextcloud - Group default quota App Tests'>
-		<directory suffix='.php'>.</directory>
+		<directory suffix='Test.php'>.</directory>
 	</testsuite>
 	<filter>
 		<whitelist>
