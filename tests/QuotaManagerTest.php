@@ -28,6 +28,7 @@ use OCP\Config\IUserConfig;
 use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
@@ -57,6 +58,7 @@ class QuotaManagerTest extends TestCase {
 			});
 		$this->appConfig->method('setValueString')
 			->willReturnCallback(function ($app, $key, $value) {
+				$this->assertLessThan(64, strlen($key)); // AppConfig::KEY_MAX_LENGTH
 				if (!isset($this->appConfigData[$app])) {
 					$this->appConfigData[$app] = [];
 				}
@@ -159,5 +161,19 @@ class QuotaManagerTest extends TestCase {
 		$manager->setGroupDefault('group1', 'default');
 
 		$this->assertEquals([], $manager->getQuotaList());
+	}
+
+	public static function groupQuotaProvider() {
+		return [
+			['short_id', '10G'],
+			['very_long_group_id_that_doesn\'t_fit_in_the_column_without_encoding_it_somehow', '10G'],
+		];
+	}
+
+	#[DataProvider('groupQuotaProvider')]
+	public function testGetSetQuota(string $group, string $quota) {
+		$manager = $this->getQuotaManager([]);
+		$manager->setGroupDefault($group, $quota);
+		$this->assertEquals($quota, $manager->getGroupDefault($group));
 	}
 }
