@@ -30,6 +30,8 @@ use OCP\IUser;
 use OCP\Util;
 
 class QuotaManager {
+	private const MAX_KEY_LENGTH = 64 - 14;
+
 	public function __construct(
 		private IAppConfig $appConfig,
 		private IUserConfig $userConfig,
@@ -37,7 +39,16 @@ class QuotaManager {
 	) {
 	}
 
+	private function fitGroupId(string $groupId): string {
+		if (strlen($groupId) > self::MAX_KEY_LENGTH) {
+			return sha1($groupId);
+		} else {
+			return $groupId;
+		}
+	}
+
 	public function setGroupDefault(string $groupId, string $quota) {
+		$groupId = $this->fitGroupId($groupId);
 		if ($quota === 'default') {
 			$this->appConfig->deleteKey('group_default_quota', 'default_quota_' . $groupId);
 		} else {
@@ -46,6 +57,7 @@ class QuotaManager {
 	}
 
 	public function getGroupDefault(string $groupId): string {
+		$groupId = $this->fitGroupId($groupId);
 		return $this->appConfig->getValueString('group_default_quota', 'default_quota_' . $groupId, 'default');
 	}
 
