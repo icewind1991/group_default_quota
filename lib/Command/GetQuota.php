@@ -31,13 +31,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GetQuota extends Base {
 	public function __construct(
-		private IGroupManager $groupManager,
-		private QuotaManager $quotaManager,
+		private readonly IGroupManager $groupManager,
+		private readonly QuotaManager $quotaManager,
 	) {
 		parent::__construct();
 	}
 
-	protected function configure() {
+	#[\Override]
+	protected function configure(): void {
 		$this
 			->setName('group_default_quota:get')
 			->setDescription('Get the default quota for a group')
@@ -45,6 +46,7 @@ class GetQuota extends Base {
 		parent::configure();
 	}
 
+	#[\Override]
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$groupId = $input->getArgument('name');
 		$group = $this->groupManager->get($groupId);

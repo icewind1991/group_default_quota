@@ -32,10 +32,11 @@ use OCP\User\GetQuotaEvent;
  */
 class QuotaListener implements IEventListener {
 	public function __construct(
-		private QuotaManager $quotaManager,
+		private readonly QuotaManager $quotaManager,
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if ($event instanceof GetQuotaEvent) {
 			$quota = $this->quotaManager->getDefaultQuotaForUser($event->getUser());
