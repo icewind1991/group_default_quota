@@ -29,18 +29,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class QuotaList extends Base {
 	public function __construct(
-		private QuotaManager $quotaManager,
+		private readonly QuotaManager $quotaManager,
 	) {
 		parent::__construct();
 	}
 
-	protected function configure() {
+	#[\Override]
+	protected function configure(): void {
 		$this
 			->setName('group_default_quota:list')
 			->setDescription('Lists all configured quotas');
 		parent::configure();
 	}
 
+	#[\Override]
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$quotas = $this->quotaManager->getQuotaList();
 		$output->writeln('Group : Quota');

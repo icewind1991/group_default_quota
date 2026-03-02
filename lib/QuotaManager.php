@@ -33,9 +33,9 @@ class QuotaManager {
 	private const MAX_KEY_LENGTH = 64 - 14;
 
 	public function __construct(
-		private IAppConfig $appConfig,
-		private IUserConfig $userConfig,
-		private IGroupManager $groupManager,
+		private readonly IAppConfig $appConfig,
+		private readonly IUserConfig $userConfig,
+		private readonly IGroupManager $groupManager,
 	) {
 	}
 

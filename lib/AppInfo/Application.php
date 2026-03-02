@@ -34,10 +34,12 @@ class Application extends App implements IBootstrap {
 		parent::__construct('group_default_quota', $urlParams);
 	}
 
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		$context->registerEventListener(GetQuotaEvent::class, QuotaListener::class);
 	}
 
+	#[\Override]
 	public function boot(IBootContext $context): void {
 	}
 }
