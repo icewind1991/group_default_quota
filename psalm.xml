@@ -14,6 +14,7 @@
 		<directory name="vendor/nextcloud/ocp"/>
 	</extraFiles>
 	<stubs>
-		<file name="tests/stubs/stub.phpstub" preloadClasses="true"/>
+		<file name="tests/stubs/oc_core_command_base.php" preloadClasses="true"/>
+		<file name="tests/stubs/stecman_component_symfony_console_bashcompletion_completion_completionawareinterface.php" />
 	</stubs>
 </psalm>
